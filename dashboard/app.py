@@ -63,7 +63,7 @@ def create_map_distribution(df_value, pollutant_type):
 # Sidebar for user input
 with st.sidebar:
     st.subheader("Air Quality")
-    st.image("air_quality_logo.png", width=200)
+    st.image("./dashboard/air_quality_logo.png", width=200)
 
     start_date, end_date = st.date_input("Select Date Range", value=[min_date, max_date], max_value=max_date, min_value=min_date)
     
