@@ -69,4 +69,4 @@ selected_polutant = st.selectbox("Pollutants",pollutants)
 
 create_line_chart_date_range(main_df,selected_polutant)
 
-# create_map_distribution(main_df,selected_polutant)
+create_map_distribution(main_df,selected_polutant)
