@@ -54,7 +54,7 @@ def create_map_distribution(df_value,type):
 
 with st.sidebar:
   st.subheader("Air Quality")
-  st.image("air_quality_logo.png", width=200)
+  st.image("https://w7.pngwing.com/pngs/433/210/png-transparent-air-conditioning-project-french-toast-brunch-indoor-air-quality-text-service-logo.png", width=200)
 
   start_date,end_date = st.date_input("Select Date Range",value=[min_date,max_date],max_value=max_date,min_value=min_date)
   end_date += timedelta(days=1)
