@@ -11,7 +11,7 @@ from datetime import datetime,timedelta
 st.set_page_config(layout="wide")
 sns.set_theme(style="white")
 
-df = pd.read_csv("master_data.csv")
+df = pd.read_csv("https://raw.githubusercontent.com/inspironCons/dataset_RPSA/refs/heads/main/dashboard/master_data.csv")
 df["date"] = pd.to_datetime(df[["year","month","day","hour"]])
 
 
