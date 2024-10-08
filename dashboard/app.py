@@ -4,16 +4,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import folium
+import random
 from folium.plugins import HeatMap
 from streamlit_folium import st_folium
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 st.set_page_config(layout="wide")
 sns.set_theme(style="white",color_codes=True)
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("master_data.csv")
+    return pd.read_csv("https://raw.githubusercontent.com/inspironCons/dataset_RPSA/refs/heads/main/dashboard/master_data.csv")
 
 # Menentukan kategori waktu
 def categorize_time(hour):
@@ -30,17 +31,17 @@ df = load_data()
 df["date"] = pd.to_datetime(df[["year","month","day","hour"]])
 df['Time_Category'] = df['hour'].apply(categorize_time)
 
-
-pollutants = ['PM2.5', 'PM10', 'SO2', 'NO2', 'CO', 'O3']
-station_data = df.groupby(['date', 'station'])[pollutants].mean().reset_index()
+# Constants
+POLLUTANTS = ['PM2.5', 'PM10', 'SO2', 'NO2', 'CO', 'O3']
+station_data = df.groupby(['date', 'station'])[POLLUTANTS].mean().reset_index()
 stations = station_data['station'].unique()
 
 min_date = station_data['date'].min()
 max_date = station_data['date'].max()
 
 def convert_date(str_date):
-  date_object = datetime.strptime(str_date, "%Y-%m-%d %H:%M:%S")
-  return date_object.strftime("%d %b %Y")
+    date_object = datetime.strptime(str_date, "%Y-%m-%d %H:%M:%S")
+    return date_object.strftime("%d %b %Y")
 
 def create_line_chart_date_range(df_value,type):
   line_styles = ['-', '--', '-.', ':']
@@ -66,6 +67,17 @@ def create_map_distribution(df_value,type):
   HeatMap(heat_data).add_to(m)
   st_folium(m,use_container_width=True)
 
+# Map distribution creation
+def create_map_distribution(df_value, pollutant_type):
+    st.header(f"{pollutant_type} Index Heatmap by Station Location")
+    
+    if "Latitude" in df_value.columns and "Longitude" in df_value.columns:
+        m = folium.Map(location=[df_value['Latitude'].mean(), df_value['Longitude'].mean()], zoom_start=10)
+        heat_data = [[row['Latitude'], row['Longitude'], row[pollutant_type]] for _, row in df_value.iterrows()]
+        HeatMap(heat_data).add_to(m)
+        st_folium(m, use_container_width=True)
+    else:
+        st.error("Latitude and Longitude data not available for map generation.")
 
 
 def create_top_trend_pollutant(df_value,type):
@@ -119,11 +131,9 @@ col1,col2 = st.columns(2)
 with col1:
   st.metric("Statsiun",selected_station)
 with col2:  
-  selected_polutant = st.selectbox("Pollutants",pollutants)
+  selected_pollutant = st.selectbox("Pollutants",POLLUTANTS)
 
 
-create_line_chart_date_range(main_df,selected_polutant)
-
-create_top_trend_pollutant(main_all_statsiun,selected_polutant)
-
-create_map_distribution(main_all_statsiun,selected_polutant)
+create_top_trend_pollutant(main_all_statsiun,selected_pollutant)
+create_line_chart_date_range(main_df, selected_pollutant)
+create_map_distribution(main_df, selected_pollutant)
