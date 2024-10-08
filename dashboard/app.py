@@ -134,6 +134,7 @@ with col2:
   selected_pollutant = st.selectbox("Pollutants",POLLUTANTS)
 
 
-create_top_trend_pollutant(main_all_statsiun,selected_pollutant)
 create_line_chart_date_range(main_df, selected_pollutant)
+st.subheader(f"Best & Worst Index Pollutant {selected_pollutant}")
+create_top_trend_pollutant(main_all_statsiun,selected_pollutant)
 create_map_distribution(main_df, selected_pollutant)
